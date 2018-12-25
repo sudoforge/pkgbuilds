@@ -19,3 +19,6 @@
 
 # mkpkg status files, from soyuz.archlinux.org
 .mkpkg_check
+
+# lockfiles from mkarchchroot+mkpkg
+*/*.lock
