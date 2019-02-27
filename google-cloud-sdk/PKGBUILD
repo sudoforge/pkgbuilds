@@ -13,6 +13,7 @@ url="https://cloud.google.com/sdk/"
 license=("Apache")
 arch=('x86_64')
 depends=('python2')
+makedepends=('ping')
 optdepends=('python2-crcmod: [gsutil] verify the integrity of GCS object contents')
 options=('!strip' 'staticlibs')
 
