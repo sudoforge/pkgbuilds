@@ -33,7 +33,7 @@ check() {
   cd ${pkgname}-${pkgver}
 
   # some tests require AWS credentials and are therefore excluded here
-  go test ./cli/... ./config/... ./configstack/... ./shell/... ./util/...
+  go test ./config/... ./configstack/... ./util/...
 }
 
 package() {
