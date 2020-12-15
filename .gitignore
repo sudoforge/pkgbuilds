@@ -12,6 +12,7 @@
 
 # subfolders, e.g. source or built package trees, vcs
 */**/
+!.githooks.d/**
 
 # backup files
 *~
