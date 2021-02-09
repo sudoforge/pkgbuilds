@@ -11,5 +11,5 @@ HOOKROOT=$(git config --local --get core.hooksPath 2>/dev/null | xargs -r dirnam
 HOOKDIR="${GITROOT}/${HOOKROOT}/${HOOKNAME}"
 
 if [ -d "$HOOKDIR" ]; then
-  find "$HOOKDIR" -not -type d -executable -print0 | xargs -0 -n1 -I script sh script "${@:2}"
+  find "$HOOKDIR" -not -type d -executable -print0 | xargs -0 -I script sh script "${@:2}"
 fi
