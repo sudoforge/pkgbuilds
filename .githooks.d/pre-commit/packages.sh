@@ -36,7 +36,7 @@ set_pkgrel() {
 update_pkgrels() {
   for p in $(get_staged_packages); do
     if pkgver_changed "$p"; then
-      sed -i -e 's/^\(pkgrel\)=.*/\1=1/' "${p}/PKGBUILD"
+      set_pkgrel "$p" "1"
     else
       if ! pkgrel_changed "$p"; then
         cur_pkgrel=$(. "${p}/PKGBUILD" && echo $pkgrel)
@@ -53,7 +53,7 @@ update_pkgrels() {
           exit 1
         fi
 
-        set_pkgrel "${p}/PKGBUILD" "$new_pkgrel"
+        set_pkgrel "$p" "$new_pkgrel"
       fi
     fi
   done
