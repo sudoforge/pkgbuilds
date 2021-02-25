@@ -7,7 +7,7 @@ get_staged_packages() {
 }
 
 get_unstaged_packages() {
-  git diff --name-only --diff-filter=ACM -- */PKGBUILD | xargs -r dirname
+  git diff --name-only --diff-filter=ACM -- */PKGBUILD */.SRCINFO | xargs -r dirname | uniq
 }
 
 pkgver_changed() {
