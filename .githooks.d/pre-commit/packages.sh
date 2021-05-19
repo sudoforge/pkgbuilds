@@ -6,10 +6,6 @@ get_staged_packages() {
   git diff --cached --name-only --diff-filter=ACM -- */PKGBUILD | xargs -r dirname
 }
 
-get_unstaged_packages() {
-  git diff --name-only --diff-filter=ACM -- */PKGBUILD */.SRCINFO | xargs -r dirname | uniq
-}
-
 pkgver_changed() {
   ! git diff --cached --name-only -Gpkgver --quiet -- "$1"
 }
@@ -39,7 +35,7 @@ update_pkgrels() {
       set_pkgrel "$p" "1"
     else
       if ! pkgrel_changed "$p"; then
-        cur_pkgrel=$(. "${p}/PKGBUILD" && echo $pkgrel)
+        cur_pkgrel=$(grep '^pkgrel=' "${p}/PKGBUILD" | sed -e 's/^pkgrel=//')
 
         if ! arg_set "$cur_pkgrel"; then
           echo "Unable to detect pkgrel for package: ${p}"
@@ -70,6 +66,4 @@ update_srcinfos() {
 update_pkgrels
 update_srcinfos
 
-for p in $(get_unstaged_packages); do
-  git add -- "$p" 2>/dev/null || continue
-done
+get_staged_packages | xargs git add 2>/dev/null
