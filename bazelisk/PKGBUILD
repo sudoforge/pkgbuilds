@@ -8,25 +8,36 @@ pkgdesc='A user-friendly launcher for Bazel.'
 arch=('x86_64' 'aarch64')
 license=('Apache')
 url='https://github.com/bazelbuild/bazelisk'
-makedepends=('git' 'go')
+makedepends=('git')
 conflicts=('bazel')
 provides=('bazel')
 source=(
   "bazelisk-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
 )
+_bazel_ver="4.1.0"
+source_x86_64=(bazel::"https://github.com/bazelbuild/bazel/releases/download/${_bazel_ver}/bazel-${_bazel_ver}-linux-x86_64")
+source_aarch64=(bazel::"https://github.com/bazelbuild/bazel/releases/download/${_bazel_ver}/bazel-${_bazel_ver}-linux-arm64")
 sha256sums=('ce5011573df8114b3ac3bd2f21130ace9368abf19ae605d086ce1efdf1033f20')
+sha256sums_x86_64=('0eb2e378d2782e7810753e2162245ad1179c1bb12f848c692b4a595b4edf779b')
+sha256sums_aarch64=('b3834742166379e52b880319dec4699082cb26fa96cbb783087deedc5fbb5f2b')
+
+prepare() {
+  export _bazel="${srcdir}/${source[1]%%::*}bazel"
+  chmod +x ${_bazel}
+}
 
 build() {
   cd "bazelisk-${pkgver}"
-  GOPATH=$PWD/go go build
-  export BAZELISK_HOME=$PWD/bazelisk_tmp
-  case $CARCH in
+  case ${CARCH} in
       x86_64) export target=amd64;;
       aarch64) export target=arm64;;
   esac
-  ./bazelisk --output_base=bazel_tmp --max_idle_secs=5 \
-      build -c opt //:bazelisk-linux-$target
-  ./bazelisk shutdown
+  # Instead of ~/.cache/bazel, install a temporary copy of bazel locally
+  ${_bazel} --output_user_root=${PWD}/bazel_tmp --max_idle_secs=5 \
+      build -c opt //:bazelisk-linux-${target}
+  ${_bazel} --output_user_root=${PWD}/bazel_tmp shutdown
+  # Fix permissions so makepkg --clean works
+  chmod -R u+w bazel_tmp/
 }
 
 package() {
@@ -37,7 +48,7 @@ package() {
     "${pkgdir}/usr/share/licenses/bazelisk/LICENSE"
 
   install -Dm755 \
-    bazel-out/*-opt-*/bin/bazelisk-linux_$target \
+    bazel-out/*-opt-*/bin/bazelisk-linux_${target} \
     "${pkgdir}/usr/bin/${pkgname%isk}"
 }
 
