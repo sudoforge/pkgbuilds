@@ -32,13 +32,8 @@ build() {
       x86_64) export target=amd64 ;;
       aarch64) export target=arm64 ;;
   esac
-  export BAZELISK_HOME=${PWD}/bazelisk_tmp
-  # Instead of ~/.cache/bazel, install a temporary copy of bazel locally
-  ${_bazelisk} --output_user_root=${PWD}/bazel_tmp --max_idle_secs=5 \
-      build -c opt //:bazelisk-linux-${target}
-  ${_bazelisk} --output_user_root=${PWD}/bazel_tmp shutdown
-  # Fix permissions so makepkg --clean works
-  chmod -R u+w bazel_tmp/
+  ${_bazelisk} --max_idle_secs=5 build -c opt //:bazelisk-linux-${target}
+  ${_bazelisk} shutdown
 }
 
 package() {
