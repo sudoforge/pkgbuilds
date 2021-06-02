@@ -24,20 +24,20 @@ noextract=("bazelisk-bin-${pkgver}")
 
 prepare() {
   export _bazelisk="${srcdir}/bazelisk-bin-${CARCH}-${pkgver}"
-  chmod +x ${_bazelisk}
+  chmod +x "${_bazelisk}"
 }
 
 build() {
   cd "bazelisk-${pkgver}"
-  case ${CARCH} in
-      x86_64) export target=amd64 ;;
-      aarch64) export target=arm64 ;;
+  case "${CARCH}" in
+      x86_64) export _target=amd64 ;;
+      aarch64) export _target=arm64 ;;
   esac
-  ${_bazelisk} build --config=release \
+  "${_bazelisk}" build --config=release \
       --workspace_status_command="echo STABLE_VERSION ${pkgver}" \
-      "//:bazelisk-linux-${target}"
-  export output_path=$(${_bazelisk} info output_path)
-  ${_bazelisk} shutdown
+      "//:bazelisk-linux-${_target}"
+  export _output_path=$("${_bazelisk}" info output_path)
+  "${_bazelisk}" shutdown
 }
 
 package() {
@@ -48,7 +48,7 @@ package() {
     "${pkgdir}/usr/share/licenses/bazelisk/LICENSE"
 
   install -Dm755 \
-    "${output_path}/*-opt-*/bin/bazelisk-linux_${target}" \
+    "${_output_path}"/*-opt-*/bin/bazelisk-linux_"${_target}" \
     "${pkgdir}/usr/bin/${pkgname%isk}"
 }
 
