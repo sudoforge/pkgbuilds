@@ -57,9 +57,22 @@ update_pkgrels() {
 
 update_srcinfos() {
   for p in $(get_staged_packages); do
-    pushd $p
-    updpkgsums && makepkg --printsrcinfo > .SRCINFO
-    popd
+    pushd $p >/dev/null 2>&1
+    printf "[ ${p} ] updating package checksums... "
+    if updpkgsums >/dev/null 2>&1; then
+      printf "OKAY\n"
+      printf "[ ${p} ] updating .SRCINFO... "
+      if makepkg --printsrcinfo > .SRCINFO; then
+        printf "OKAY\n"
+      else
+        printf "FAIL\n"
+        exit 1
+      fi
+    else
+      printf "FAIL\n"
+      exit 1
+    fi
+    popd >/dev/null 2>&1
   done
 }
 
