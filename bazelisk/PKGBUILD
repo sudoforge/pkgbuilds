@@ -1,11 +1,12 @@
 # Maintainer: Benjamin Denhartog <ben@sudoforge.com>
+# Contributor: William Jagels <aur@jagels.us>
 # Contributor: Marc Plano-Lesay <marc.planolesay@gmail.com>
 
 pkgname=bazelisk
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A user-friendly launcher for Bazel.'
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 license=('Apache')
 url='https://github.com/bazelbuild/bazelisk'
 makedepends=('git')
@@ -13,19 +14,30 @@ conflicts=('bazel')
 provides=('bazel')
 source=(
   "bazelisk-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-  "bazelisk-bin-${pkgver}::https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-amd64"
 )
-sha256sums=('ce5011573df8114b3ac3bd2f21130ace9368abf19ae605d086ce1efdf1033f20'
-            'b8c7f2a1b07ad64a2f27f8f19a202f90d044de7b5b6ccc387a6fe5d4a8ec4937')
+source_x86_64=("bazelisk-bin-${CARCH}-${pkgver}"::"https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-amd64")
+source_aarch64=("bazelisk-bin-${CARCH}-${pkgver}"::"https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-arm64")
+sha256sums=('ce5011573df8114b3ac3bd2f21130ace9368abf19ae605d086ce1efdf1033f20')
+sha256sums_x86_64=('b8c7f2a1b07ad64a2f27f8f19a202f90d044de7b5b6ccc387a6fe5d4a8ec4937')
+sha256sums_aarch64=('6a997d6d7ceab2f14f078a9aa03cf158e0e5278b4fa49996c2526ec2cc06ca44')
+noextract=("bazelisk-bin-${CARCH}-${pkgver}")
 
 prepare() {
-  chmod +x "${srcdir}/${source[1]%%::*}"
+  export _bazelisk="${srcdir}/bazelisk-bin-${CARCH}-${pkgver}"
+  chmod +x "${_bazelisk}"
 }
 
 build() {
   cd "bazelisk-${pkgver}"
-  "${srcdir}/${source[1]%%::*}" build //:bazelisk
-  "${srcdir}/${source[1]%%::*}" shutdown
+  case "${CARCH}" in
+      x86_64) export _target=amd64 ;;
+      aarch64) export _target=arm64 ;;
+  esac
+  "${_bazelisk}" build --config=release \
+      --workspace_status_command="echo STABLE_VERSION ${pkgver}" \
+      "//:bazelisk-linux-${_target}"
+  export _output_path=$("${_bazelisk}" info output_path)
+  "${_bazelisk}" shutdown
 }
 
 package() {
@@ -36,7 +48,6 @@ package() {
     "${pkgdir}/usr/share/licenses/bazelisk/LICENSE"
 
   install -Dm755 \
-    "bazel-bin/bazelisk_/bazelisk" \
+    "${_output_path}"/*-opt-*/bin/bazelisk-linux_"${_target}" \
     "${pkgdir}/usr/bin/${pkgname%isk}"
 }
-
