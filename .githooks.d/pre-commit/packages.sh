@@ -7,7 +7,7 @@ get_staged_packages() {
 }
 
 pkgver_changed() {
-  ! git diff --cached --name-only -Gpkgver --quiet -- "$1"
+  ! git diff --cached --name-only -G\^pkgver --quiet -- "$1"
 }
 
 pkgrel_changed() {
