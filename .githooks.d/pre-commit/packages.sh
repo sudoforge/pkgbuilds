@@ -32,23 +32,25 @@ set_pkgrel() {
 update_pkgrels() {
   for p in $(get_staged_packages); do
     if pkgver_changed "$p"; then
+      echo "[ ${p} ] setting pkgrel to '1'"
       set_pkgrel "$p" "1"
     else
       if ! pkgrel_changed "$p"; then
         cur_pkgrel=$(grep '^pkgrel=' "${p}/PKGBUILD" | sed -e 's/^pkgrel=//')
 
         if ! arg_set "$cur_pkgrel"; then
-          echo "Unable to detect pkgrel for package: ${p}"
+          echo "[ ${p} ] unable to detect current pkgrel"
           exit 1
         fi
 
         new_pkgrel=$(($cur_pkgrel+1))
 
         if ! arg_set "$new_pkgrel"; then
-          echo "Unable to determine new pkgrel for package: ${p}"
+          echo "[ ${p} ] unable to determine new pkgrel"
           exit 1
         fi
 
+        echo "[ ${p} ] setting pkgrel to '${new_pkgrel}'"
         set_pkgrel "$p" "$new_pkgrel"
       fi
     fi
