@@ -7,11 +7,11 @@ get_staged_packages() {
 }
 
 pkgver_changed() {
-  ! git diff --cached --name-only -G\^pkgver --quiet -- "$1"
+  ! git diff --cached --name-only --exit-code -G '^pkgver' -- "$1" 1>/dev/null
 }
 
 pkgrel_changed() {
-  ! git diff --cached --name-only -Gpkgrel --quiet -- "$1"
+  ! git diff --cached --name-only --exit-code -G '^pkgrel' -- "$1" 1>/dev/null
 }
 
 arg_set() {
@@ -35,6 +35,7 @@ update_pkgrels() {
       echo "[ ${p} ] setting pkgrel to '1'"
       set_pkgrel "$p" "1"
     else
+      echo "[ ${p} ] did not detect that pkgver had changed"
       if ! pkgrel_changed "$p"; then
         cur_pkgrel=$(grep '^pkgrel=' "${p}/PKGBUILD" | sed -e 's/^pkgrel=//')
 
