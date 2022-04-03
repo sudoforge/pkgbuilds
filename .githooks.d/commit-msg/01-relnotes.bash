@@ -47,6 +47,9 @@ get_relnotes_uri() {
 
             echo "https://cloud.google.com/sdk/docs/release-notes#${v}_${ts}"
             ;;
+        bazelisk)
+            echo "https://github.com/bazelbuild/bazelisk/releases/tag/v${pkgver}"
+            ;;
     esac
 }
 
