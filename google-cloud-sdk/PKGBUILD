@@ -15,7 +15,7 @@ pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcl
 url="https://cloud.google.com/sdk/"
 license=("Apache")
 arch=('x86_64')
-depends=('python')
+depends=('python' 'libxcrypt-compat')
 optdepends=(
   "python2: for dev_appserver.py and endpointscfg support"
   "python-crcmod: [gsutil] verify the integrity of GCS object contents"
