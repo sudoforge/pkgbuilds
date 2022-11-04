@@ -69,7 +69,7 @@ index d9aaaa4c..1d50fb0c 100644
  import base64
  from decimal import (Decimal, DecimalException, Context,
                       Clamped, Overflow, Inexact, Underflow, Rounded)
--from collections import Mapping
+-from collections.abc import Mapping
  from boto.dynamodb.exceptions import DynamoDBNumberError
  from boto.compat import filter, map, six, long_type
  
@@ -88,10 +88,18 @@ diff --git a/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py b/platfo
 index 687fae74..ae92d087 100644
 --- a/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py
 +++ b/platform/gsutil/gslib/vendored/boto/boto/mws/connection.py
-@@ -29,6 +29,13 @@ import boto.mws.response
+@@ -18,7 +18,6 @@
+ # WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ # IN THE SOFTWARE.
+-from collections import abc
+ import xml.sax
+ import hashlib
+ import string
+@@ -29,6 +28,13 @@ import boto.mws.response
  from boto.handler import XmlHandler
  from boto.compat import filter, map, six, encodebytes
- 
+
 +try:
 +  # Python 3.3 and above.
 +  collections_abc = collections.abc
@@ -100,14 +108,23 @@ index 687fae74..ae92d087 100644
 +
 +
  __all__ = ['MWSConnection']
- 
+
  api_version_path = {
-@@ -109,7 +116,7 @@ def http_body(field):
+@@ -109,7 +115,7 @@ def http_body(field):
  def destructure_object(value, into, prefix, members=False):
      if isinstance(value, boto.mws.response.ResponseElement):
          destructure_object(value.__dict__, into, prefix, members=members)
--    elif isinstance(value, collections.Mapping):
+-    elif isinstance(value, abc.Mapping):
 +    elif isinstance(value, collections_abc.Mapping):
          for name in value:
              if name.startswith('_'):
                  continue
+@@ -117,7 +123,7 @@ def destructure_object(value, into, prefix, members=False):
+                                members=members)
+     elif isinstance(value, six.string_types):
+         into[prefix] = value
+-    elif isinstance(value, abc.Iterable):
++    elif isinstance(value, collections_abc.Iterable):
+         for index, element in enumerate(value):
+             suffix = (members and '.member.' or '.') + str(index + 1)
+             destructure_object(element, into, prefix + suffix,
