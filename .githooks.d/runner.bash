@@ -37,7 +37,7 @@ function find_hook_dirs() {
               -not -type d \
               -perm -u=x,g=x,o=x \
               -print0 |\
-            xargs -0 -I script sh script "$args"
+            xargs -0 -I script sh script $args
         fi
 
         # If the current path is the git root, stop
