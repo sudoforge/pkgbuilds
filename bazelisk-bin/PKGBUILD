@@ -2,19 +2,19 @@
 
 pkgname=bazelisk-bin
 pkgver=1.15.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A user-friendly launcher for Bazel'
 url='https://github.com/bazelbuild/bazelisk'
 conflicts=("bazel")
 provides=('bazel')
 license=('Apache')
-arch=('x86_64')
-source=(
-  "LICENSE-${pkgver}::https://raw.githubusercontent.com/bazelbuild/bazelisk/v${pkgver}/LICENSE"
-  "bazelisk-linux-amd64-${pkgver}::https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-amd64"
-)
-sha256sums=('c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4'
-            '19fd84262d5ef0cb958bcf01ad79b528566d8fef07ca56906c5c516630a0220b')
+arch=('x86_64' 'aarch64')
+source=("LICENSE-${pkgver}::https://raw.githubusercontent.com/bazelbuild/bazelisk/v${pkgver}/LICENSE")
+source_x86_64+=("bazelisk-bin-${pkgver}::https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-amd64")
+source_aarch64+=("bazelisk-bin-${pkgver}::https://github.com/bazelbuild/bazelisk/releases/download/v${pkgver}/bazelisk-linux-arm64")
+sha256sums=('c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4')
+sha256sums_x86_64+=('19fd84262d5ef0cb958bcf01ad79b528566d8fef07ca56906c5c516630a0220b')
+sha256sums_aarch64+=('3862ab0857b776411906d0a65215509ca72f6d4923f01807e11299a8d419db80')
 
 package() {
   install -D -m 644 \
@@ -22,6 +22,6 @@ package() {
     "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   install -D -m 755 \
-    "${srcdir}/${source[1]%%::*}" \
+    "${srcdir}/bazelisk-bin-${pkgver}" \
     "${pkgdir}/usr/bin/${pkgname%isk-bin}"
 }
