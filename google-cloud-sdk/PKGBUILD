@@ -9,7 +9,7 @@
 # https://github.com/sudoforge/pkgbuilds
 
 pkgname="google-cloud-sdk"
-pkgver=408.0.1
+pkgver=413.0.0
 pkgrel=1
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/sdk/"
@@ -17,18 +17,18 @@ license=("Apache")
 arch=('x86_64')
 depends=('python')
 optdepends=(
-  "python2: for dev_appserver.py and endpointscfg support"
+  "python2: for dev_appserver.py support"
   "python-crcmod: [gsutil] verify the integrity of GCS object contents"
 )
 options=('!strip' 'staticlibs')
 source=(
-  "https://dl.google.com/dl/cloudsdk/release/downloads/for_packagers/linux/${pkgname}_${pkgver}.orig.tar.gz"
+  "https://dl.google.com/dl/cloudsdk/release/downloads/for_packagers/linux/google-cloud-cli_${pkgver}.orig.tar.gz"
   "google-cloud-sdk.sh"
   "0001-set-python2-for-dev-appserver-py.patch"
   "0002-add-compdef-to-zsh-completion.patch"
   "0003-collections-abc.patch"
 )
-sha256sums=('2e6c848c03edae288e46ffd087d0122aee57d8b55cb71f3a8089d8920d2cbc42'
+sha256sums=('1ebb32cc5a83fd9eded10649e579f97c699a9412906fb45688f3f5a07ec3bde3'
             'ecd7b3895f6ecf1c6411f385bee3a4b64139976d72069469d323c8a09b97aaea'
             '62ec7f56e09168d375823e9e99fcdcfbf40b0fffdd75f35cf91122c5902c82e9'
             '4694f5191ceea7cf8076861ce5790ba9e809023da278b0f6ed862b9611e5aa93'
@@ -86,7 +86,7 @@ package() {
   for i in "${pkgdir}/opt/${pkgname}/bin"/*; do
     ln -st "${pkgdir}/usr/bin/" "${i#${pkgdir}}"
   done
-  rm -f "${pkgdir}"/usr/bin/{bq,dev_appserver.py*,endpointscfg.py*,java_dev_appserver.sh}
+  rm -f "${pkgdir}"/usr/bin/{bq,dev_appserver.py*,java_dev_appserver.sh}
 
   chmod -x "${pkgdir}"/usr/share/man/man1/*
   find "${pkgdir}/opt/${pkgname}" -name "*.html" -o -name "*.json" -exec chmod -x {} \;
