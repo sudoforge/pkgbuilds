@@ -22,7 +22,7 @@ optdepends=(
 )
 options=('!strip' 'staticlibs')
 source=(
-  "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/${pkgname}-${pkgver}-linux-${arch}.tar.gz"
+  "https://dl.google.com/dl/cloudsdk/release/downloads/for_packagers/linux/google-cloud-cli_${pkgver}.orig.tar.gz"
   "google-cloud-sdk.sh"
   "0001-set-python2-for-dev-appserver-py.patch"
   "0003-add-compdef-to-zsh-completion.patch"
