@@ -62,6 +62,11 @@ update_srcinfos() {
   for p in $(get_staged_packages); do
     pushd $p >/dev/null 2>&1
     printf "[ ${p} ] updating package checksums... "
+    if ! command -v updpkgsums > /dev/null; then
+      >&2 printf "FAIL\n"
+      >&2 printf "Command 'updpkgsums' not found. Try installing 'pacman-contrib'."
+      exit 1
+    fi
     if updpkgsums >/dev/null 2>&1; then
       printf "OKAY\n"
       printf "[ ${p} ] updating .SRCINFO... "
