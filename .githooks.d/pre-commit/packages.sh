@@ -2,21 +2,21 @@
 
 set -e
 
-_RUNTIME_DEPS=('updpkgsums' 'makepkg' 'git')
+_RUNTIME_DEPS='updpkgsums makepkg git'
 
 check_runtime_deps() {
-  local missing_deps=()
-  for d in "${_RUNTIME_DEPS[@]}"; do
+  missing_deps=""
+  for d in ${_RUNTIME_DEPS}; do
     if ! command -v "$d" > /dev/null; then
-      missing_deps+=("$d")
+      missing_deps="$d $missing_deps"
     fi
   done
-  if [ "${#missing_deps[@]}" -gt 0 ]; then
+  if arg_set "$missing_deps"; then
     >&2 printf "FAIL\n"
-    for d in "${missing_deps[@]}"; do
-      >&2 printf "Command '$d' not found.\n"
+    for d in ${missing_deps}; do
+      >&2 printf "Command '%s' not found.\n" "$d"
     done
-    >&2 printf "Hint: use 'pacman -F ${missing_deps[*]}' to determine which packages to install."
+    >&2 printf "Hint: use 'pacman -F %s' to determine which packages to install." "$missing_deps"
     exit 1
   fi
 }
