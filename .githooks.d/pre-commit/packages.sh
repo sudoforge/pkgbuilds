@@ -2,6 +2,25 @@
 
 set -e
 
+_RUNTIME_DEPS=('updpkgsums' 'makepkg' 'git')
+
+check_runtime_deps() {
+  local missing_deps=()
+  for d in "${_RUNTIME_DEPS[@]}"; do
+    if ! command -v "$d" > /dev/null; then
+      missing_deps+=("$d")
+    fi
+  done
+  if [ "${#missing_deps[@]}" -gt 0 ]; then
+    >&2 printf "FAIL\n"
+    for d in "${missing_deps[@]}"; do
+      >&2 printf "Command '$d' not found.\n"
+    done
+    >&2 printf "Hint: use 'pacman -F ${missing_deps[*]}' to determine which packages to install."
+    exit 1
+  fi
+}
+
 get_staged_packages() {
   git diff --cached --name-only --diff-filter=ACM -- */PKGBUILD | xargs -r dirname
 }
@@ -62,11 +81,6 @@ update_srcinfos() {
   for p in $(get_staged_packages); do
     pushd $p >/dev/null 2>&1
     printf "[ ${p} ] updating package checksums... "
-    if ! command -v updpkgsums > /dev/null; then
-      >&2 printf "FAIL\n"
-      >&2 printf "Command 'updpkgsums' not found. Try installing 'pacman-contrib'."
-      exit 1
-    fi
     if updpkgsums >/dev/null 2>&1; then
       printf "OKAY\n"
       printf "[ ${p} ] updating .SRCINFO... "
@@ -84,6 +98,7 @@ update_srcinfos() {
   done
 }
 
+check_runtime_deps
 update_pkgrels
 update_srcinfos
 
