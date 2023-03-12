@@ -1,13 +1,13 @@
 pkgbase = buildozer-bin
 	pkgdesc = A command line tool to rewrite Bazel BUILD files using standard conventions
-	pkgver = 4.2.5
+	pkgver = 6.0.1
 	pkgrel = 1
 	url = https://github.com/bazelbuild/buildtools
 	arch = x86_64
 	license = Apache
-	source = buildozer-4.2.5::https://github.com/bazelbuild/buildtools/releases/download/4.2.5/buildozer-linux-amd64
-	source = LICENSE-4.2.5::https://raw.githubusercontent.com/bazelbuild/buildtools/4.2.5/LICENSE
-	sha256sums = e8e39b71c52318a9030dd9fcb9bbfd968d0e03e59268c60b489e6e6fc1595d7b
+	source = buildozer-6.0.1::https://github.com/bazelbuild/buildtools/releases/download/6.0.1/buildozer-linux-amd64
+	source = LICENSE-6.0.1::https://raw.githubusercontent.com/bazelbuild/buildtools/6.0.1/LICENSE
+	sha256sums = a7ca6257f78088a795e7b6e37b78b7b76fb91de1d465d851078d0226f08b90c9
 	sha256sums = cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
 
 pkgname = buildozer-bin
