@@ -2,21 +2,26 @@
 
 set -e
 
-_RUNTIME_DEPS='updpkgsums makepkg git'
+DEPS="updpkgsums makepkg git"
 
 check_runtime_deps() {
-  missing_deps=""
-  for d in ${_RUNTIME_DEPS}; do
-    if ! command -v "$d" > /dev/null; then
-      missing_deps="$d $missing_deps"
+  missing=""
+  for dep in $DEPS; do
+    if ! command -v "$dep" 2>&1 > /dev/null; then
+      if [ -z "$missing" ]; then
+        missing="$dep"
+      else
+        missing="${missing} ${dep}"
+      fi
     fi
   done
-  if arg_set "$missing_deps"; then
-    >&2 printf "FAIL\n"
-    for d in ${missing_deps}; do
-      >&2 printf "Command '%s' not found.\n" "$d"
+  
+  if arg_set "$missing"; then
+    for dep in $missing; do
+      printf "error: command not found: %s\n" "$d" 1>&2
     done
-    >&2 printf "Hint: use 'pacman -F %s' to determine which packages to install." "$missing_deps"
+    
+    printf "fatal: missing required runtime dependencies, aborting.\n" 1>&2
     exit 1
   fi
 }
