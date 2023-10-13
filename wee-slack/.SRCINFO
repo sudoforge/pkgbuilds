@@ -1,6 +1,6 @@
 pkgbase = wee-slack
 	pkgdesc = A WeeChat plugin for Slack.com
-	pkgver = 2.9.0
+	pkgver = 2.10.1
 	pkgrel = 1
 	url = https://github.com/wee-slack/wee-slack/
 	install = wee-slack.install
@@ -9,7 +9,7 @@ pkgbase = wee-slack
 	depends = weechat
 	depends = python-websocket-client
 	conflicts = wee-slack-git
-	source = wee-slack_2.9.0.tar.gz::https://github.com/wee-slack/wee-slack/archive/v2.9.0.tar.gz
-	sha512sums = 263cf464a5188488494ce8a7fe56755c5a0379953600953719f60f0a16c0c05e2651f72b2a27ab0c85ad4dbdecfa033371af39dbe6113b75e5ee9d06687ef9b4
+	source = wee-slack_2.10.1.tar.gz::https://github.com/wee-slack/wee-slack/archive/v2.10.1.tar.gz
+	sha512sums = 15d8ba9ab39015fa17aa600c3e8d29920ed8d9b97fafaa0fdb2ad516a7d90d2f64fbba4926adca559e8146d47d9fdcb1ea32c8b9f41c6d634bc13e82ec84f698
 
 pkgname = wee-slack
