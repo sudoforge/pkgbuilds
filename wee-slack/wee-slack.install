@@ -1,21 +1,10 @@
 _install_update_msg() {
 cat <<EOF
-
-
 To autoload wee-slack on start up, each user will need to symlink the plugin to
-the correct autoload folder:
+the correct autoload folder (depends on your weechat version and configuration):
 
     \$ ln -s /usr/share/weechat/python/wee_slack.py ~/.weechat/python/autoload/
-
-
-Previous versions of this package recommended creating symlinks in your local
-~/.weechat directory. These are no longer necessary, and their removal is
-recommended:
-
-    \$ rm -f ~/.weechat/weemoji.json
-    \$ rm -f ~/.weechat/python/wee_slack.py
-
-
+    \$ ln -s /usr/share/weechat/python/wee_slack.py ~/.local/share/weechat/python/autoload/
 EOF
 }
 
