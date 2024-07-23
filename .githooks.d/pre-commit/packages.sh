@@ -2,6 +2,30 @@
 
 set -e
 
+DEPS="updpkgsums makepkg git"
+
+check_runtime_deps() {
+  missing=""
+  for dep in $DEPS; do
+    if ! command -v "$dep" 2>&1 > /dev/null; then
+      if [ -z "$missing" ]; then
+        missing="$dep"
+      else
+        missing="${missing} ${dep}"
+      fi
+    fi
+  done
+  
+  if arg_set "$missing"; then
+    for dep in $missing; do
+      printf "error: command not found: %s\n" "$d" 1>&2
+    done
+    
+    printf "fatal: missing required runtime dependencies, aborting.\n" 1>&2
+    exit 1
+  fi
+}
+
 get_staged_packages() {
   git diff --cached --name-only --diff-filter=ACM -- */PKGBUILD | xargs -r dirname
 }
@@ -79,6 +103,7 @@ update_srcinfos() {
   done
 }
 
+check_runtime_deps
 update_pkgrels
 update_srcinfos
 
